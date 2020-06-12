@@ -1,4 +1,4 @@
-add_library(deezer-api-cpp utils/curl_utils.cpp)
+add_library(deezer-api-cpp Deezer.cpp utils/curl_utils.cpp models/Track.cpp)
 
 target_link_libraries(deezer-api-cpp ${LIBS})
 
