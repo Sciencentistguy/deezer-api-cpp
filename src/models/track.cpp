@@ -1,4 +1,4 @@
-#include "Track.h"
+#include "track.h"
 
 #include <iostream>
 
@@ -11,6 +11,14 @@ Track::Track(const nlohmann::json& track_json) :
     explicit_lyrics{track_json.value("explicit_lyrics", false)}, explicit_content_lyrics{track_json.value("explicit_content_lyrics", 0)},
     explicit_content_cover{track_json.value("explicit_content_cover", 0)}, preview{track_json.value("preview", "")}, bpm{track_json.value("bpm", 0.0)},
     gain{track_json.value("gain", 0.0)}, available_countries{track_json.value("available_countries", std::vector<std::string>{})} {
+//    std::cout << track_json.dump() << '\n';
+    auto album_json = track_json.value("album", "{}"_json);
+    if (album_json == "{}"_json) {
+        album = nullptr;
+    } else {
+        album = std::make_shared<Album>(album_json);
+    }
+
 }
 
 int Track::getId() const {
@@ -91,4 +99,10 @@ double Track::getGain() const {
 
 const std::vector<std::string>& Track::getAvailableCountries() const {
     return available_countries;
+}
+bool operator==(const Track& lhs, const Track& rhs) {
+    return lhs.id == rhs.id;
+}
+ std::shared_ptr<const Album> Track::getAlbum() const {
+     return album;
 }

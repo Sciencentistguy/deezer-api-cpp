@@ -4,6 +4,9 @@
 
 #include <nlohmann/json.hpp>
 
+#include "album.h"
+class Album;
+
 class Track {
     int id;
     bool readable{};
@@ -28,9 +31,10 @@ class Track {
     std::vector<std::string> available_countries;
     // Track alternative;
     // Artist artist;
-    // Album album;
+    std::shared_ptr<Album> album;
+
  public:
-    explicit Track(const nlohmann::json& track_json);
+    Track(const nlohmann::json& track_json);
     Track() = default;
     int getId() const;
     bool isReadable() const;
@@ -52,4 +56,6 @@ class Track {
     double getBpm() const;
     double getGain() const;
     const std::vector<std::string>& getAvailableCountries() const;
+    friend bool operator==(const Track& lhs, const Track& rhs);
+    std::shared_ptr<const Album> getAlbum() const;
 };
