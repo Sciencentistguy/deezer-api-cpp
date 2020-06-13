@@ -1,6 +1,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
+#include "artist.h"
 #include "track.h"
 class Track;
 
@@ -17,22 +18,22 @@ class Album {
     std::string cover_big;
     std::string cover_xl;
     int genre_id;
-    //std::vector<Genre> genres;
+    // std::vector<Genre> genres;
     std::string label;
     int nb_tracks;
     int duration;
     int fans;
     int rating;
-    //Date release_date;
+    // Date release_date;
     std::string record_type;
     bool available;
-    //Album alternative;
+    // Album alternative;
     std::string tracklist;
     bool explicit_lyrics;
     int explicit_content_lyrics;
     int explicit_content_cover;
-    //std::vector<Artist> contributors;
-    //Artist artist;
+    std::vector<Artist> contributors;
+    std::shared_ptr<Artist> artist;
     std::vector<Track> tracks;
 
  public:
@@ -60,4 +61,6 @@ class Album {
     int getExplicitContentLyrics() const;
     int getExplicitContentCover() const;
     const std::vector<Track>& getTracks() const;
+    const std::vector<Artist>& getContributors() const;
+    const std::shared_ptr<Artist> getArtist() const;
 };

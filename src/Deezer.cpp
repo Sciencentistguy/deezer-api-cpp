@@ -16,3 +16,7 @@ Album Deezer::getAlbum(int id) {
     auto json = deezerApiRequest("album/" + std::to_string(id));
     return Album(json);
 }
+Artist Deezer::getArtist(int id) {
+    auto json = deezerApiRequest("artist/" + std::to_string(id));
+    return Artist(json);
+}

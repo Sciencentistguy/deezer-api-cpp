@@ -1,10 +1,12 @@
 #pragma once
+#include <ostream>
 #include <string>
 #include <vector>
 
 #include <nlohmann/json.hpp>
 
 #include "album.h"
+#include "artist.h"
 class Album;
 
 class Track {
@@ -32,6 +34,10 @@ class Track {
     // Track alternative;
     // Artist artist;
     std::shared_ptr<Album> album;
+    std::shared_ptr<Artist> artist;
+
+ public:
+    const std::shared_ptr<Artist> getArtist() const;
 
  public:
     Track(const nlohmann::json& track_json);
@@ -58,4 +64,5 @@ class Track {
     const std::vector<std::string>& getAvailableCountries() const;
     friend bool operator==(const Track& lhs, const Track& rhs);
     std::shared_ptr<const Album> getAlbum() const;
+    friend std::ostream& operator<<(std::ostream& os, const Track& track);
 };

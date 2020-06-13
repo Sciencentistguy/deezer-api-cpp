@@ -1,5 +1,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cert-err58-cpp"
+#include <chrono>
+
 #include <Deezer.h>
 
 #include "../src/utils/curl_utils.h"
@@ -7,7 +9,12 @@
 
 TEST(DeezerApiCppTest, testCURL) {
     // This example is from the deezer api documentation, so I'm trusting that it won't change
+    auto start{std::chrono::high_resolution_clock::now()};
     const auto data = deezerApiRequest("user/2529");
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "cURL request took " << elapsed.count() << " seconds.";
+
     const auto matchData =
         R"({"id":2529,"name":"dadbond","link":"https:\/\/www.deezer.com\/profile\/2529","picture":"https:\/\/api.deezer.com\/user\/2529\/image","picture_small":"https:\/\/e-cdns-images.dzcdn.net\/images\/user\/35b2a990ccc09d4d0e90390484d221e3\/56x56-000000-80-0-0.jpg","picture_medium":"https:\/\/e-cdns-images.dzcdn.net\/images\/user\/35b2a990ccc09d4d0e90390484d221e3\/250x250-000000-80-0-0.jpg","picture_big":"https:\/\/e-cdns-images.dzcdn.net\/images\/user\/35b2a990ccc09d4d0e90390484d221e3\/500x500-000000-80-0-0.jpg","picture_xl":"https:\/\/e-cdns-images.dzcdn.net\/images\/user\/35b2a990ccc09d4d0e90390484d221e3\/1000x1000-000000-80-0-0.jpg","country":"FR","tracklist":"https:\/\/api.deezer.com\/user\/2529\/flow","type":"user"})"_json;
     EXPECT_EQ(data["id"], matchData["id"]);
@@ -15,12 +22,16 @@ TEST(DeezerApiCppTest, testCURL) {
 
 TEST(DeezerApiCppTest, testGetTrack) {
     // This test is "Harder, Better, Faster, Stronger" by Daft Punk (the example provided on the api documentation)
+    auto start{std::chrono::high_resolution_clock::now()};
     Deezer d{};
     const auto track = d.getTrack(3135556);
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Track request + parse took " << elapsed.count() << " seconds.";
 
     /*
      * Cannot test:
-     * getShare() - This changes every time the API is hit.
+     * getShare() - This can change.
      */
     EXPECT_EQ(track.getTitle(), "Harder, Better, Faster, Stronger");
     EXPECT_EQ(track.getTitleShort(), "Harder, Better, Faster, Stronger");
@@ -50,18 +61,23 @@ TEST(DeezerApiCppTest, testGetTrack) {
 
     EXPECT_EQ(track.getAvailableCountries(), matchAvailableCountries);
 
-    EXPECT_EQ(track.getAlbum()->getId(), d.getAlbum(302127).getId());
+    EXPECT_EQ(track.getAlbum()->getId(), 302127);
+    EXPECT_EQ(track.getArtist()->getId(), 27);
 }
 
 TEST(DeezerApiCppTest, testGetAlbum) {
     // This test is "Discovery" by Daft Punk. It is the example from the Deezer api documentation
+    auto start{std::chrono::high_resolution_clock::now()};
     Deezer d;
-    auto album = d.getAlbum(302127);
+    const auto album = d.getAlbum(302127);
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Album request + parse took " << elapsed.count() << " seconds.";
 
     /*
      * Cannot test:
-     * getShare() - This changes.
-     * getFans() - This changes.
+     * getShare() - This can change.
+     * getFans() - This can change.
      */
     EXPECT_EQ(album.getId(), 302127);
     EXPECT_EQ(album.getTitle(), "Discovery");
@@ -70,9 +86,9 @@ TEST(DeezerApiCppTest, testGetAlbum) {
     EXPECT_EQ(album.getCover(), "https://api.deezer.com/album/302127/image");
     EXPECT_EQ(album.getGenreId(), 113);
     EXPECT_EQ(album.getLabel(), "Parlophone (France)");
-    EXPECT_EQ(album.getNbTracks(),14);
+    EXPECT_EQ(album.getNbTracks(), 14);
     EXPECT_EQ(album.getDuration(), 3660);
-//    EXPECT_EQ(album.getFans(), 212365);
+    //    EXPECT_EQ(album.getFans(), 212365);
     EXPECT_EQ(album.getRating(), 0);
     EXPECT_EQ(album.getRecordType(), "album");
     EXPECT_EQ(album.isAvailable(), true);
@@ -80,25 +96,51 @@ TEST(DeezerApiCppTest, testGetAlbum) {
     EXPECT_EQ(album.isExplicitLyrics(), false);
     EXPECT_EQ(album.getExplicitContentLyrics(), 7);
     EXPECT_EQ(album.getExplicitContentCover(), 0);
-    //contributors
-    //artist
+    // contributors
+    // artist
 
-    EXPECT_EQ(album.getTracks()[0].getId(), d.getTrack(3135553).getId());
-    EXPECT_EQ(album.getTracks()[1].getId(), d.getTrack(3135554).getId());
-    EXPECT_EQ(album.getTracks()[2].getId(), d.getTrack(3135555).getId());
-    EXPECT_EQ(album.getTracks()[3].getId(), d.getTrack(3135556).getId());
-    EXPECT_EQ(album.getTracks()[4].getId(), d.getTrack(3135557).getId());
-    EXPECT_EQ(album.getTracks()[5].getId(), d.getTrack(3135558).getId());
-    EXPECT_EQ(album.getTracks()[6].getId(), d.getTrack(3135559).getId());
-    EXPECT_EQ(album.getTracks()[7].getId(), d.getTrack(3135560).getId());
-    EXPECT_EQ(album.getTracks()[8].getId(), d.getTrack(3135561).getId());
-    EXPECT_EQ(album.getTracks()[9].getId(), d.getTrack(3135562).getId());
-    EXPECT_EQ(album.getTracks()[10].getId(), d.getTrack(3135563).getId());
-    EXPECT_EQ(album.getTracks()[11].getId(), d.getTrack(3135564).getId());
-    EXPECT_EQ(album.getTracks()[12].getId(), d.getTrack(3135565).getId());
-    EXPECT_EQ(album.getTracks()[13].getId(), d.getTrack(3135566).getId());
+    EXPECT_EQ(album.getTracks()[0].getId(), 3135553);
+    EXPECT_EQ(album.getTracks()[1].getId(), 3135554);
+    EXPECT_EQ(album.getTracks()[2].getId(), 3135555);
+    EXPECT_EQ(album.getTracks()[3].getId(), 3135556);
+    EXPECT_EQ(album.getTracks()[4].getId(), 3135557);
+    EXPECT_EQ(album.getTracks()[5].getId(), 3135558);
+    EXPECT_EQ(album.getTracks()[6].getId(), 3135559);
+    EXPECT_EQ(album.getTracks()[7].getId(), 3135560);
+    EXPECT_EQ(album.getTracks()[8].getId(), 3135561);
+    EXPECT_EQ(album.getTracks()[9].getId(), 3135562);
+    EXPECT_EQ(album.getTracks()[10].getId(), 3135563);
+    EXPECT_EQ(album.getTracks()[11].getId(), 3135564);
+    EXPECT_EQ(album.getTracks()[12].getId(), 3135565);
+    EXPECT_EQ(album.getTracks()[13].getId(), 3135566);
 
     EXPECT_EQ(album.getTracks()[0].getAlbum(), nullptr);
 
+    EXPECT_EQ(album.getArtist()->getId(), 27);
+    EXPECT_EQ(album.getContributors()[0].getId(), 27);
+
 }
+
+TEST(DeezerApiCppTest, testGetArtist) {
+    // This test is "Daft Punk". It is the example from the Deezer api documentation
+    auto start{std::chrono::high_resolution_clock::now()};
+    Deezer d;
+    auto artist = d.getArtist(27);
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Artist request + parse took " << elapsed.count() << " seconds.";
+
+    /*
+     * Cannot test:
+     * getFans() - This can change
+     */
+    EXPECT_EQ(artist.getId(), 27);
+    EXPECT_EQ(artist.getName(), "Daft Punk");
+    EXPECT_EQ(artist.getLink(), "https://www.deezer.com/artist/27");
+    EXPECT_EQ(artist.getPicture(), "https://api.deezer.com/artist/27/image");
+    EXPECT_NE(artist.getNbAlbum(), 0);
+    EXPECT_EQ(artist.isRadio(), true);
+    EXPECT_EQ(artist.getTracklist(), "https://api.deezer.com/artist/27/top?limit=50");
+}
+
 #pragma clang diagnostic pop
