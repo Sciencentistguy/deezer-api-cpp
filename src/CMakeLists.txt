@@ -1,4 +1,4 @@
-add_library(deezer-api-cpp Deezer.cpp utils/curl_utils.cpp models/track.cpp models/album.cpp models/artist.cpp models/genre.cpp)
+add_library(deezer-api-cpp Deezer.cpp utils/curl_utils.cpp models/track.cpp models/album.cpp models/artist.cpp models/genre.cpp models/user.cpp)
 
 target_link_libraries(deezer-api-cpp ${LIBS})
 

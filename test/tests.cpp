@@ -118,7 +118,6 @@ TEST(DeezerApiCppTest, testGetAlbum) {
 
     EXPECT_EQ(album.getArtist()->getId(), 27);
     EXPECT_EQ(album.getContributors()[0].getId(), 27);
-
 }
 
 TEST(DeezerApiCppTest, testGetArtist) {
@@ -155,6 +154,21 @@ TEST(DeezerApiCppTest, testGetGenre) {
     EXPECT_EQ(genre.getId(), 2);
     EXPECT_EQ(genre.getName(), "African Music");
     EXPECT_EQ(genre.getPicture(), "https://api.deezer.com/genre/2/image");
+}
 
+TEST(DeezerApiCppTest, testGetUser) {
+    auto start{std::chrono::high_resolution_clock::now()};
+    Deezer d;
+    auto user = d.getUser(2529);
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Genre request + parse took " << elapsed.count() << " seconds.";
+
+    EXPECT_EQ(user.getId(), 2529);
+    EXPECT_EQ(user.getName(), "dadbond");
+    EXPECT_EQ(user.getLink(), "https://www.deezer.com/profile/2529");
+    EXPECT_EQ(user.getPicture(), "https://api.deezer.com/user/2529/image");
+    EXPECT_EQ(user.getCountry(), "FR");
+    EXPECT_EQ(user.getTracklist(), "https://api.deezer.com/user/2529/flow");
 }
 #pragma clang diagnostic pop
