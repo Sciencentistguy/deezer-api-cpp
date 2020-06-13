@@ -22,6 +22,13 @@ Album::Album(nlohmann::json album_json) :
         }
     }
 
+    const auto alternative_json = album_json.value("alternative","{}"_json);
+    if (alternative_json == "{}"_json) {
+        alternative = nullptr;
+    } else {
+        alternative = std::make_shared<Album>(alternative_json);
+    }
+
     const auto artist_json = album_json.value("artist", "{}"_json);
     if (artist_json == "{}"_json) {
         artist = nullptr;
@@ -32,6 +39,11 @@ Album::Album(nlohmann::json album_json) :
     const auto contributors_v = album_json.value("contributors", std::vector<nlohmann::json>{});
     for (const auto& contributor : contributors_v) {
         contributors.push_back(Artist(contributor));
+    }
+
+    const auto genres_v = album_json.value("genres", "{}"_json).value("data","{}"_json);
+    for (const auto& genre : genres_v) {
+        genres.push_back(Genre(genre));
     }
 }
 int Album::getId() const {
@@ -108,4 +120,10 @@ const std::vector<Artist>& Album::getContributors() const {
 }
 const std::shared_ptr<Artist> Album::getArtist() const {
     return artist;
+}
+const std::vector<Genre>& Album::getGenres() const {
+    return genres;
+}
+std::shared_ptr<Album> Album::getAlternative() const {
+    return alternative;
 }

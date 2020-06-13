@@ -143,4 +143,18 @@ TEST(DeezerApiCppTest, testGetArtist) {
     EXPECT_EQ(artist.getTracklist(), "https://api.deezer.com/artist/27/top?limit=50");
 }
 
+TEST(DeezerApiCppTest, testGetGenre) {
+    // This test isn't the example from the documentation, because that uses ID 0, which may allow the test to pass when the parsing failed.
+    auto start{std::chrono::high_resolution_clock::now()};
+    Deezer d;
+    auto genre = d.getGenre(2);
+    auto finish{std::chrono::high_resolution_clock::now()};
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Genre request + parse took " << elapsed.count() << " seconds.";
+
+    EXPECT_EQ(genre.getId(), 2);
+    EXPECT_EQ(genre.getName(), "African Music");
+    EXPECT_EQ(genre.getPicture(), "https://api.deezer.com/genre/2/image");
+
+}
 #pragma clang diagnostic pop

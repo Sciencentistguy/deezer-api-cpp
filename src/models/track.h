@@ -31,8 +31,7 @@ class Track {
     double bpm{};
     double gain{};
     std::vector<std::string> available_countries;
-    // Track alternative;
-    // Artist artist;
+    std::shared_ptr<Track> alternative;
     std::shared_ptr<Album> album;
     std::shared_ptr<Artist> artist;
 
@@ -65,4 +64,5 @@ class Track {
     friend bool operator==(const Track& lhs, const Track& rhs);
     std::shared_ptr<const Album> getAlbum() const;
     friend std::ostream& operator<<(std::ostream& os, const Track& track);
+    const std::shared_ptr<Track>& getAlternative() const;
 };

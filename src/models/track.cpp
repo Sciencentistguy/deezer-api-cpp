@@ -18,11 +18,19 @@ Track::Track(const nlohmann::json& track_json) :
     } else {
         album = std::make_shared<Album>(album_json);
     }
+
     auto artist_json = track_json.value("artist", "{}"_json);
     if (artist_json == "{}"_json) {
         artist = nullptr;
     } else {
         artist = std::make_shared<Artist>(artist_json);
+    }
+
+    auto alternative_json = track_json.value("alternative", "{}"_json);
+    if (alternative_json == "{}"_json) {
+        alternative = nullptr;
+    } else {
+        alternative = std::make_shared<Track>(alternative_json);
     }
 }
 
@@ -119,4 +127,7 @@ std::ostream& operator<<(std::ostream& os, const Track& track) {
 }
 const std::shared_ptr<Artist> Track::getArtist() const {
     return artist;
+}
+const std::shared_ptr<Track>& Track::getAlternative() const {
+    return alternative;
 }

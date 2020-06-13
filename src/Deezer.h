@@ -2,9 +2,10 @@
 
 #include <string>
 
-#include "models/artist.h"
+#include "models/genre.h"
 
 #include "models/album.h"
+#include "models/artist.h"
 #include "models/track.h"
 
 class Deezer {
@@ -16,4 +17,5 @@ class Deezer {
     void setArl(const std::string& arl);
     Album getAlbum(int id);
     Artist getArtist(int id);
+    Genre getGenre(int id);
 };

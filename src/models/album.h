@@ -2,6 +2,7 @@
 #include <nlohmann/json.hpp>
 
 #include "artist.h"
+#include "genre.h"
 #include "track.h"
 class Track;
 
@@ -18,7 +19,7 @@ class Album {
     std::string cover_big;
     std::string cover_xl;
     int genre_id;
-    // std::vector<Genre> genres;
+    std::vector<Genre> genres;
     std::string label;
     int nb_tracks;
     int duration;
@@ -27,7 +28,7 @@ class Album {
     // Date release_date;
     std::string record_type;
     bool available;
-    // Album alternative;
+    std::shared_ptr<Album> alternative;
     std::string tracklist;
     bool explicit_lyrics;
     int explicit_content_lyrics;
@@ -62,5 +63,7 @@ class Album {
     int getExplicitContentCover() const;
     const std::vector<Track>& getTracks() const;
     const std::vector<Artist>& getContributors() const;
+    const std::vector<Genre>& getGenres() const;
+    std::shared_ptr<Album> getAlternative() const;
     const std::shared_ptr<Artist> getArtist() const;
 };
